@@ -1,15 +1,9 @@
 package com.oocode;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
-
+import okhttp3.*;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.Duration;
-import java.time.LocalTime;
+import java.math.*;
+import java.time.*;
 
 import static java.lang.Integer.parseInt;
 
@@ -18,7 +12,6 @@ public class TideCalculator {
         System.out.println(midDayTide("Folkestone", "11-01-2020"));
     }
 
-    // Signature of this must remain unchanged because it is relied on by the rest of the system
     public static BigDecimal midDayTide(String place, String date) throws IOException {
         String l;
         Request request = new Request.Builder()

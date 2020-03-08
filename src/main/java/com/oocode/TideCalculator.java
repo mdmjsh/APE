@@ -8,10 +8,10 @@ import static java.lang.Integer.parseInt;
 
 public class TideCalculator {
     public static void main(String[] args) throws Exception {
-        System.out.println(midDayTide("Folkestone", "11-01-2020"));
+        System.out.println(getMidDayTide("Folkestone", "11-01-2020"));
     }
 
-    public static BigDecimal midDayTide(String place, String date)
+    public static BigDecimal getMidDayTide(String place, String date)
             throws IOException {
 
         String responseString;
@@ -21,38 +21,43 @@ public class TideCalculator {
                         place, date))
                 .build();
 
-        try (Response e = new OkHttpClient.Builder().build()
+        try (Response response = new OkHttpClient.Builder().build()
                 .newCall(request).execute()) {
-            try (ResponseBody responseBody = e.body()) {
+            try (ResponseBody responseBody = response.body()) {
                 assert responseBody != null;
                 responseString = responseBody.string();
                 System.out.println("responseString = " + responseString);
             }
         }
 
-        String[] result = responseString.split("\n");
-        Value first = new Value(time(result[1].split(" ")[1]),
-                new BigDecimal(result[1].split(" ")[2]));
-        Value second = new Value(time(result[2].split(" ")[1]),
-                new BigDecimal(result[2].split(" ")[2]));
-        Duration between = Duration.between(first.first, second.first);
-        Duration since = Duration.between(first.first, LocalTime.NOON);
-        BigDecimal betweenLevels = second.second.subtract(first.second);
+        String[] tideData = responseString.split("\n");
+        Value lowTideValue = new Value(time(tideData[1].split(" ")[1]),
+                new BigDecimal(tideData[1].split(" ")[2]));
+        Value highTideValue = new Value(time(tideData[2].split(" ")[1]),
+                new BigDecimal(tideData[2].split(" ")[2]));
+        return interpolateTideHeight(lowTideValue, highTideValue);
+    }
+
+    private static BigDecimal interpolateTideHeight(Value lowTideValue, Value highTideValue) {
+        Duration between = Duration.between(lowTideValue.localTime, highTideValue.localTime);
+        Duration since = Duration.between(lowTideValue.localTime, LocalTime.NOON);
+        BigDecimal betweenLevels = highTideValue.tideHeight.subtract(lowTideValue.tideHeight);
         double proportionOfWayThrough = (double) since.toMillis() /
                 (double) between.toMillis();
         BigDecimal sinceLevelChange = betweenLevels.multiply(
                 new BigDecimal(proportionOfWayThrough));
-        return first.second.add(sinceLevelChange)
-                .setScale(2, RoundingMode.CEILING); }
+        return lowTideValue.tideHeight.add(sinceLevelChange)
+                .setScale(2, RoundingMode.CEILING);
+    }
 
     private static LocalTime time(String time) {
         return LocalTime.of(parseInt(time.split(":")[0]),
                 parseInt(time.split(":")[1])); }
 
     private static class Value {
-        public final LocalTime first;
-        public final BigDecimal second;
-        public Value(LocalTime first, BigDecimal second) {
-            this.first = first;
-            this.second = second; }}
+        public final LocalTime localTime;
+        public final BigDecimal tideHeight;
+        public Value(LocalTime localTime, BigDecimal tideHeight) {
+            this.localTime = localTime;
+            this.tideHeight = tideHeight; }}
 }

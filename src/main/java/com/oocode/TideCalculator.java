@@ -13,7 +13,8 @@ public class TideCalculator {
 
     public static BigDecimal midDayTide(String place, String date)
             throws IOException {
-        String l;
+
+        String responseString;
         Request request = new Request.Builder()
                 .url(String.format(
                         "https://dry-fjord-40481.herokuapp.com/tides/%s/%s",
@@ -22,14 +23,14 @@ public class TideCalculator {
 
         try (Response e = new OkHttpClient.Builder().build()
                 .newCall(request).execute()) {
-            try (ResponseBody x = e.body()) {
-                assert x != null;
-                l = x.string();
-//                System.out.println("l = " + l);
+            try (ResponseBody responseBody = e.body()) {
+                assert responseBody != null;
+                responseString = responseBody.string();
+                System.out.println("responseString = " + responseString);
             }
         }
 
-        String[] result = l.split("\n");
+        String[] result = responseString.split("\n");
         Value first = new Value(time(result[1].split(" ")[1]),
                 new BigDecimal(result[1].split(" ")[2]));
         Value second = new Value(time(result[2].split(" ")[1]),

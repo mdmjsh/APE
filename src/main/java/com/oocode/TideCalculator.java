@@ -31,22 +31,22 @@ public class TideCalculator {
         }
 
         String[] tideData = responseString.split("\n");
-        Value lowTideValue = new Value(time(tideData[1].split(" ")[1]),
+        TideTimeHeight lowTide = new TideTimeHeight(time(tideData[1].split(" ")[1]),
                 new BigDecimal(tideData[1].split(" ")[2]));
-        Value highTideValue = new Value(time(tideData[2].split(" ")[1]),
+        TideTimeHeight highTide = new TideTimeHeight(time(tideData[2].split(" ")[1]),
                 new BigDecimal(tideData[2].split(" ")[2]));
-        return interpolateTideHeight(lowTideValue, highTideValue);
+        return interpolateTideHeight(lowTide, highTide);
     }
 
-    private static BigDecimal interpolateTideHeight(Value lowTideValue, Value highTideValue) {
-        Duration between = Duration.between(lowTideValue.localTime, highTideValue.localTime);
-        Duration since = Duration.between(lowTideValue.localTime, LocalTime.NOON);
-        BigDecimal betweenLevels = highTideValue.tideHeight.subtract(lowTideValue.tideHeight);
-        double proportionOfWayThrough = (double) since.toMillis() /
-                (double) between.toMillis();
-        BigDecimal sinceLevelChange = betweenLevels.multiply(
+    private static BigDecimal interpolateTideHeight(TideTimeHeight lowTide, TideTimeHeight highTide) {
+        Duration lowToHighDeltaSeconds = Duration.between(lowTide.localTime, highTide.localTime);
+        Duration secondsFromNoon = Duration.between(lowTide.localTime, LocalTime.NOON);
+        BigDecimal highToLowDeltaHeight = highTide.tideHeight.subtract(lowTide.tideHeight);
+        double proportionOfWayThrough = (double) secondsFromNoon.toMillis() /
+                (double) lowToHighDeltaSeconds.toMillis();
+        BigDecimal sinceLevelChange = highToLowDeltaHeight.multiply(
                 new BigDecimal(proportionOfWayThrough));
-        return lowTideValue.tideHeight.add(sinceLevelChange)
+        return lowTide.tideHeight.add(sinceLevelChange)
                 .setScale(2, RoundingMode.CEILING);
     }
 
@@ -54,10 +54,10 @@ public class TideCalculator {
         return LocalTime.of(parseInt(time.split(":")[0]),
                 parseInt(time.split(":")[1])); }
 
-    private static class Value {
+    private static class TideTimeHeight {
         public final LocalTime localTime;
         public final BigDecimal tideHeight;
-        public Value(LocalTime localTime, BigDecimal tideHeight) {
+        public TideTimeHeight(LocalTime localTime, BigDecimal tideHeight) {
             this.localTime = localTime;
             this.tideHeight = tideHeight; }}
 }

@@ -10,4 +10,5 @@ public class SomeTest {
     public void assignment_eg1() {
         assertThat(1, equalTo(1));
     }
+
 }

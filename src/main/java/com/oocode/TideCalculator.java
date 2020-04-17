@@ -36,7 +36,8 @@ public class TideCalculator {
                 .newCall(request).execute()) {
             try (ResponseBody responseBody = response.body()) {
 
-                assert responseBody == null;
+                assert responseBody != null;
+//              n.b. this could be lead to a nullPointerException
                 dailyTideHeightsForPlace = responseBody.string();
                 String newline = System.getProperty("line.separator");
                 System.out.println("responseString: " + newline + newline + dailyTideHeightsForPlace);

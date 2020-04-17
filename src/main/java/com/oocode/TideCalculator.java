@@ -8,7 +8,7 @@ import static java.lang.Integer.parseInt;
 
 public class TideCalculator {
     public static void main(String[] args) throws Exception {
-        System.out.println(getMidDayTide("Folkestone", "11-01-2020"));
+        System.out.println(getMidDayTide("Folkestone", "12-01-2020 "));
     }
 
     public static BigDecimal getMidDayTide(String place, String date)
@@ -26,7 +26,8 @@ public class TideCalculator {
             try (ResponseBody responseBody = response.body()) {
                 assert responseBody != null;
                 responseString = responseBody.string();
-                System.out.println("responseString = " + responseString);
+                String newline = System.getProperty("line.separator");
+                System.out.println("responseString: " + newline + newline + responseString);
             }
         }
 

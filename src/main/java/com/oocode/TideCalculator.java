@@ -14,7 +14,18 @@ public class TideCalculator {
     public static BigDecimal getMidDayTide(String place, String date)
             throws IOException {
 
-        String responseString;
+        String dailyTideHeightsForPlace = makeApiCall(place, date);
+
+        String[] tideData = dailyTideHeightsForPlace.split("\n");
+        TideTimeHeight lowTide = new TideTimeHeight(time(tideData[1].split(" ")[1]),
+                new BigDecimal(tideData[1].split(" ")[2]));
+        TideTimeHeight highTide = new TideTimeHeight(time(tideData[2].split(" ")[1]),
+                new BigDecimal(tideData[2].split(" ")[2]));
+        return interpolateTideHeight(lowTide, highTide);
+    }
+
+    private static String makeApiCall(String place, String date) throws IOException {
+        String dailyTideHeightsForPlace;
         Request request = new Request.Builder()
                 .url(String.format(
                         "https://dry-fjord-40481.herokuapp.com/tides/%s/%s",
@@ -24,19 +35,14 @@ public class TideCalculator {
         try (Response response = new OkHttpClient.Builder().build()
                 .newCall(request).execute()) {
             try (ResponseBody responseBody = response.body()) {
-                assert responseBody != null;
-                responseString = responseBody.string();
+
+                assert responseBody == null;
+                dailyTideHeightsForPlace = responseBody.string();
                 String newline = System.getProperty("line.separator");
-                System.out.println("responseString: " + newline + newline + responseString);
+                System.out.println("responseString: " + newline + newline + dailyTideHeightsForPlace);
             }
         }
-
-        String[] tideData = responseString.split("\n");
-        TideTimeHeight lowTide = new TideTimeHeight(time(tideData[1].split(" ")[1]),
-                new BigDecimal(tideData[1].split(" ")[2]));
-        TideTimeHeight highTide = new TideTimeHeight(time(tideData[2].split(" ")[1]),
-                new BigDecimal(tideData[2].split(" ")[2]));
-        return interpolateTideHeight(lowTide, highTide);
+        return dailyTideHeightsForPlace;
     }
 
     private static BigDecimal interpolateTideHeight(TideTimeHeight lowTide, TideTimeHeight highTide) {

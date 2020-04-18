@@ -3,10 +3,13 @@ import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.mock;
 
 public class TestTideCalculator {
     @Test
-    public void assignment_eg1() {
-        assertThat(1, equalTo(1));
+    public void testInterpolateTideHeight {
+        mockMakeApiCall = mock(TideCalculator.makeApiCall())
+
+        assertThat(, equalTo(1));
     }
 }

@@ -6,25 +6,27 @@ import java.math.*;
 import java.time.*;
 import static java.lang.Integer.parseInt;
 
-public class TideCalculator {
+public class TideCalculator implements TideCalculatorInterface {
     public static void main(String[] args) throws Exception {
-        System.out.println(MidDayTide("Folkestone", "12-01-2020 "));
+        System.out.println(MidDayTide("Folkestone", "12-01-2020"));
     }
 
-    public static BigDecimal MidDayTide(String place, String date)
+    static BigDecimal MidDayTide(String place, String date)
             throws IOException {
 
-        String dailyTideHeightsForPlace = makeApiCall(place, date);
+        String dailyTideHeightsForPlace = TideCalculator.makeApiCall(place, date);
 
         String[] tideData = dailyTideHeightsForPlace.split("\n");
-        TideTimeHeight lowTide = new TideTimeHeight(time(tideData[1].split(" ")[1]),
+        TideCalculator.TideTimeHeight lowTide = new TideCalculator.TideTimeHeight(
+                TideCalculator.time(tideData[1].split(" ")[1]),
                 new BigDecimal(tideData[1].split(" ")[2]));
-        TideTimeHeight highTide = new TideTimeHeight(time(tideData[2].split(" ")[1]),
+        TideCalculator.TideTimeHeight highTide = new TideCalculator.TideTimeHeight(
+                TideCalculator.time(tideData[2].split(" ")[1]),
                 new BigDecimal(tideData[2].split(" ")[2]));
-        return interpolateTideHeight(lowTide, highTide);
+        return TideCalculator.interpolateTideHeight(lowTide, highTide);
     }
 
-    private static String makeApiCall(String place, String date) throws IOException {
+    protected static String makeApiCall(String place, String date) throws IOException {
         String dailyTideHeightsForPlace;
         Request request = new Request.Builder()
                 .url(String.format(
@@ -61,9 +63,9 @@ public class TideCalculator {
                 parseInt(time.split(":")[1])); }
 
     private static class TideTimeHeight {
-        public final LocalTime localTime;
-        public final BigDecimal tideHeight;
-        public TideTimeHeight(LocalTime localTime, BigDecimal tideHeight) {
+        final LocalTime localTime;
+        final BigDecimal tideHeight;
+        TideTimeHeight(LocalTime localTime, BigDecimal tideHeight) {
             this.localTime = localTime;
             this.tideHeight = tideHeight; }}
 }

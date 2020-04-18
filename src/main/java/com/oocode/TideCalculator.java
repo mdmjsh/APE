@@ -48,13 +48,11 @@ public class TideCalculator {
 
     private static BigDecimal interpolateTideHeight(TideTimeHeight lowTide, TideTimeHeight highTide) {
         Duration lowToHighDeltaSeconds = Duration.between(lowTide.localTime, highTide.localTime);
-        Duration secondsFromNoon = Duration.between(lowTide.localTime, LocalTime.NOON);
-        BigDecimal highToLowDeltaHeight = highTide.tideHeight.subtract(lowTide.tideHeight);
-        double proportionOfWayThrough = (double) secondsFromNoon.toMillis() /
+        Duration LowToNoonDeltaSeconds = Duration.between(lowTide.localTime, LocalTime.NOON);
+        double noonIntersection = (double) LowToNoonDeltaSeconds.toMillis() /
                 (double) lowToHighDeltaSeconds.toMillis();
-        BigDecimal sinceLevelChange = highToLowDeltaHeight.multiply(
-                new BigDecimal(proportionOfWayThrough));
-        return lowTide.tideHeight.add(sinceLevelChange)
+        return lowTide.tideHeight.add(highTide.tideHeight.subtract(lowTide.tideHeight).multiply(
+                new BigDecimal(noonIntersection)))
                 .setScale(2, RoundingMode.CEILING);
     }
 

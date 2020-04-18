@@ -8,10 +8,10 @@ import static java.lang.Integer.parseInt;
 
 public class TideCalculator {
     public static void main(String[] args) throws Exception {
-        System.out.println(getMidDayTide("Folkestone", "12-01-2020 "));
+        System.out.println(MidDayTide("Folkestone", "12-01-2020 "));
     }
 
-    public static BigDecimal getMidDayTide(String place, String date)
+    public static BigDecimal MidDayTide(String place, String date)
             throws IOException {
 
         String dailyTideHeightsForPlace = makeApiCall(place, date);

@@ -1,0 +1,151 @@
+commit 0c6f16f5d3cdb40fe74ff1323dab497e5ef33169
+Author: jshhrrsn <joshharrison13@gmail.com>
+Date:   Sun Apr 19 19:07:17 2020 +0100
+
+    wip started next test
+
+commit 227a2223e85aceec5e170d18ce9cf5515678bd36
+Author: jshhrrsn <joshharrison13@gmail.com>
+Date:   Sun Apr 19 19:03:49 2020 +0100
+
+    wip started next test
+
+commit 1177f4332c989515bb367eba7807af0f95cd91a2
+Author: jshhrrsn <joshharrison13@gmail.com>
+Date:   Sun Apr 19 18:59:34 2020 +0100
+
+    wip started next test
+
+commit 8cd8ebbbcc14d8d080a0ad4cd66993e58426d8a1
+Author: jshhrrsn <joshharrison13@gmail.com>
+Date:   Sun Apr 19 18:45:27 2020 +0100
+
+    Added second example to test with four tide extremities
+
+commit 4e44f8648d4219bd50c644bc8f9c2028ff852dbf
+Author: jshhrrsn <joshharrison13@gmail.com>
+Date:   Sun Apr 19 18:29:05 2020 +0100
+
+    Refactored code so that test now passes.
+
+commit 1a0d4758c1363d37a68f9ecfbd6013a533ea11c3
+Author: jshhrrsn <joshharrison13@gmail.com>
+Date:   Sun Apr 19 16:20:18 2020 +0100
+
+    First serve in TTD ping-pong - created failing test for testInterpolateTideHeight.
+    
+    Also made some static method non-static in order to allow for use of overriding initTideAPIAdapter seam.
+
+commit 47168907dbea93b56ea2f09a2c870d68d1f52f2d
+Author: jshhrrsn <joshharrison13@gmail.com>
+Date:   Sun Apr 19 15:58:01 2020 +0100
+
+    Introducing a seam by moving the TideAPIAdapter construction inside initTideApiAdapter method.
+    
+    Currently unable to mock the TideCalulator's call to tideAPIAdpater as it is declared privately in the TideCalculator class.
+    This seam will enable overriding of the method to use the mocked Adpater in test scenatios.
+    See: https://tanzu.vmware.com/content/blog/test-after-in-java-subclass-and-override
+
+commit 8e1f6520471a9159972291e933569816bcd7a1e1
+Author: jshhrrsn <joshharrison13@gmail.com>
+Date:   Sun Apr 19 15:25:37 2020 +0100
+
+    Refactored getTideTimeString and MakeApiCall methods to TideAPIAdapter class which implements the TideAPIAdapterInterface (FKA TideCalculatorInterface).
+    
+    The previous implementation led to difficulties testing as the adapter method lived on the class under test. This implementation allows for proper mocking, i.e. without the use of a spy or partial mock. Following the principle of avoiding mocking the class under test.
+
+commit 1ff517cfec098fff5ebbb8128a31107586df9291
+Author: jshhrrsn <joshharrison13@gmail.com>
+Date:   Sun Apr 19 13:11:35 2020 +0100
+
+    Updated mockito in build.gradle following java 11 compatibility issue
+
+commit c1e17b9bd9cc3931941181e4944396d274e791ec
+Author: jshhrrsn <joshharrison13@gmail.com>
+Date:   Sun Apr 19 12:47:18 2020 +0100
+
+    added getTideTimesString to interface and gave default package access
+
+commit 77fc93a8c779c0d6b348425946f709dfb852d289
+Author: jshhrrsn <joshharrison13@gmail.com>
+Date:   Sun Apr 19 12:34:00 2020 +0100
+
+    Added getTideTimesString adapter method to wrap call to makeApiCall
+
+commit 9e9a89ab23f6323fb6e27b46223b4d094b2da74e
+Author: jshhrrsn <joshharrison13@gmail.com>
+Date:   Sat Apr 18 19:39:05 2020 +0100
+
+    added TideCalculatorInterface for mocking and wip test
+
+commit 1b96b45389e76091d635c2ac363f174e1c9526a8
+Author: jshhrrsn <joshharrison13@gmail.com>
+Date:   Sat Apr 18 18:17:00 2020 +0100
+
+    Inlined some single use variables (sinceLevelChange, highToLowDeltaHeight) and renamed others in interpolateTideHeight
+
+commit f7279f7a5b7fd62d1e88f915bd81473e1c139f45
+Author: jshhrrsn <joshharrison13@gmail.com>
+Date:   Sat Apr 18 17:37:12 2020 +0100
+
+    renamed getMidDayTide back to MidDatTide and added shell for TestTIdeCalculator
+
+commit 6f0b7f6f4ed2e42a1189ada4a5941538e2914a44
+Author: jshhrrsn <joshharrison13@gmail.com>
+Date:   Fri Apr 17 08:47:11 2020 +0100
+
+    added comment to pinpoint null pointer exception for future debugging
+
+commit e5f75b92e8b86d45badafee5e1ccfc3154dc1780
+Author: jshhrrsn <joshharrison13@gmail.com>
+Date:   Fri Apr 17 08:36:48 2020 +0100
+
+    Renamed responseString to dailyTideHeightsForPlace
+
+commit 93d16ac208e13252373578c2fc2fbff5669b4e8e
+Author: jshhrrsn <joshharrison13@gmail.com>
+Date:   Fri Apr 17 08:15:22 2020 +0100
+
+    added newline line break for output formatting
+
+commit c2a838ca2656de68187bf14668e69e96d3b8e833
+Author: jshhrrsn <joshharrison13@gmail.com>
+Date:   Sun Mar 8 22:11:30 2020 +0000
+
+    Introduced TideTimeHeight
+
+commit dee5592ccbf782f66aac4c9481e2c4c8d9ba24b6
+Author: jshhrrsn <joshharrison13@gmail.com>
+Date:   Sun Mar 8 21:56:47 2020 +0000
+
+    Introduce interpolateTideHeight method and variable name refactorings
+
+commit 888ed50b974922c06712fced4eb3e9fd50cdfcef
+Author: jshhrrsn <joshharrison13@gmail.com>
+Date:   Sun Mar 8 20:51:12 2020 +0000
+
+    updated gradle version to make compatible with java 13 and updated variable names
+
+commit e1a97db60c3b312a6fecc34b78c66001699e730a
+Author: Ivan Moore <ivan@teamoptimization.com>
+Date:   Sun Feb 2 16:54:01 2020 +0000
+
+    comment out debug line which could help diagnose
+
+commit c1da342af6853064d82ae5da3002fd08fad30814
+Author: Ivan Moore <ivan@teamoptimization.com>
+Date:   Sun Feb 2 16:50:37 2020 +0000
+
+    reduce length and width for benefit of assignment text
+
+commit 65d94c6b0c46dcf4042cc0c4f8d2e5c3439d2917
+Author: Ivan Moore <ivan@teamoptimization.com>
+Date:   Sun Feb 2 16:43:08 2020 +0000
+
+    reduce import length for benefit of assignment text
+
+commit 46abd3898bd76ab7865129dc1d2ceedb8ce96122
+Author: Ivan Moore <ivan@teamoptimization.com>
+Date:   Sun Feb 2 16:14:36 2020 +0000
+
+    initial

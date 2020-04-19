@@ -10,6 +10,10 @@ public class TideCalculator {
 
     private TideAPIAdapter tideAPIAdapter = initTideAPIAdapter();
 
+    public static int getFirstLowTideIndex(String tideData) {
+        return (tideData.substring(0, 2).equals("HW"))? 1:0;
+    }
+
     public void main(String[] args) throws Exception {
         System.out.println(MidDayTide("Folkestone", "12-01-2020"));
     }

@@ -8,11 +8,12 @@ import static org.mockito.Mockito.*;
 
 
 public class TestTideCalculator {
+    private String walkThroughData = "HW 03:57 3.90\nLW 10:09 1.40\nHW 16:21 4.00\nLW 22:33 1.60";
+    private String knownErrorData = "LW 06:00 2.55\nHW 12:11 3.39\nLW 18:22 2.85";
+
     @Test
     public void testInterpolateTideHeight() throws IOException {
         TideAPIAdapter tideAPIAdapter = mock(TideAPIAdapter.class);
-        String knownErrorData = "LW 06:00 2.55\nHW 12:11 3.39\nLW 18:22 2.85";
-
         // Override the initTideAPIAdapter to plug in the mock Adapter
         TideCalculator tideCalculator = new TideCalculator(){
 
@@ -29,17 +30,17 @@ public class TestTideCalculator {
 
 
         // run again with the example data
-        String walkThroughData = "HW 03:57 3.90\nLW 10:09 1.40\nHW 16:21 4.00\nLW 22:33 1.60";
+
         when(tideAPIAdapter.getTideTimesString("Folkestone", "12-01-2020")).thenReturn(walkThroughData);
         assertEquals(tideCalculator.MidDayTide("Folkestone", "12-01-2020").toString(),
                 "2.18");
     }
 
 
-
     @Test
     public void testGetLowAndHighTides(){
-        // todo
+       assertEquals(TideCalculator.getFirstLowTideIndex(knownErrorData), 0);
+        assertEquals(TideCalculator.getFirstLowTideIndex(walkThroughData), 1);
     }
 
 }

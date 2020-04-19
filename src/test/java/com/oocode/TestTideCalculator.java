@@ -34,5 +34,10 @@ public class TestTideCalculator {
         assertEquals(tideCalculator.MidDayTide("Folkestone", "12-01-2020").toString(),
                 "2.18");
     }
+
+
+
+    @Test
+    public void testGetLowAndHighTides
 }
 

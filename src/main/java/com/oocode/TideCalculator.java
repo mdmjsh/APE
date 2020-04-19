@@ -13,7 +13,7 @@ public class TideCalculator implements TideCalculatorInterface {
         System.out.println(MidDayTide("Folkestone", "12-01-2020"));
     }
 
-    static BigDecimal MidDayTide(String place, String date)
+    protected static BigDecimal MidDayTide(String place, String date)
             throws IOException {
 
         String dailyTideHeightsForPlace = getTideTimesString(place, date);
@@ -33,7 +33,7 @@ public class TideCalculator implements TideCalculatorInterface {
   * @param date String of the date to search on
   * @return string of the tide data from the API response body
   * */
-    protected static String getTideTimesString(String place, String date) throws IOException {
+    static String getTideTimesString(String place, String date) throws IOException {
         String dailyTideHeightsForPlace = makeApiCall(place, date);
         String newline = System.getProperty("line.separator");
         System.out.println("responseString: " + newline + newline + dailyTideHeightsForPlace);

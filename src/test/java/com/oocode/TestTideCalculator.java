@@ -38,6 +38,6 @@ public class TestTideCalculator {
 
 
     @Test
-    public void testGetLowAndHighTides
+    public void testGetLowAndHighTides(){}
 }
 

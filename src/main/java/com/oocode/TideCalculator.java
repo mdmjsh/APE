@@ -21,11 +21,11 @@ public class TideCalculator {
 
         String[] tideData = dailyTideHeightsForPlace.split("\n");
         TideTimeHeight lowTide = new TideTimeHeight(
+                getLocalTime(tideData[0].split(" ")[1]),
+                new BigDecimal(tideData[0].split(" ")[2]));
+        TideTimeHeight highTide = new TideTimeHeight(
                 getLocalTime(tideData[1].split(" ")[1]),
                 new BigDecimal(tideData[1].split(" ")[2]));
-        TideTimeHeight highTide = new TideTimeHeight(
-                getLocalTime(tideData[2].split(" ")[1]),
-                new BigDecimal(tideData[2].split(" ")[2]));
         return interpolateTideHeight(lowTide, highTide);
     }
 
@@ -36,11 +36,13 @@ public class TideCalculator {
     private BigDecimal interpolateTideHeight(TideTimeHeight lowTide, TideTimeHeight highTide) {
         Duration lowToHighDeltaSeconds = Duration.between(lowTide.localTime, highTide.localTime);
         Duration LowToNoonDeltaSeconds = Duration.between(lowTide.localTime, LocalTime.NOON);
+
         double noonIntersection = (double) LowToNoonDeltaSeconds.toMillis() /
                 (double) lowToHighDeltaSeconds.toMillis();
-        return lowTide.tideHeight.add(highTide.tideHeight.subtract(lowTide.tideHeight).multiply(
-                new BigDecimal(noonIntersection)))
-                .setScale(2, RoundingMode.CEILING);
+        BigDecimal fullRiseInSeaLevelHighTide = highTide.tideHeight.subtract(lowTide.tideHeight);
+        BigDecimal noonRiseInSeaLevel = new BigDecimal(noonIntersection).multiply(fullRiseInSeaLevelHighTide);
+
+        return lowTide.tideHeight.add(noonRiseInSeaLevel).setScale(2, RoundingMode.CEILING);
     }
 
     private LocalTime getLocalTime(String time) {

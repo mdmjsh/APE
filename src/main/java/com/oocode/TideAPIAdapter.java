@@ -1,11 +1,16 @@
 package com.oocode;
 
+import com.oocode.TideCalculator.TideTimeHeight;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.time.LocalTime;
+
+import static java.lang.Integer.parseInt;
 
 public class TideAPIAdapter implements TideAPIAdapterInterface{
     /** Adapter wrapper to call the dry-fjord API.
@@ -37,4 +42,28 @@ public class TideAPIAdapter implements TideAPIAdapterInterface{
             }
         }
     }
+
+    TideTimeHeight[] getLowAndHighTides(String dailyTideHeightsForPlace){
+        int LowTideIndex = getFirstLowTideIndex(dailyTideHeightsForPlace);
+
+        String[] tideData = dailyTideHeightsForPlace.split("\n");
+        TideCalculator.TideTimeHeight lowTide = getTideTimeHeight(tideData[LowTideIndex]);
+
+        TideCalculator.TideTimeHeight highTide = getTideTimeHeight(tideData[LowTideIndex + 1]);
+        return new TideTimeHeight[]{lowTide, highTide};
+    }
+
+    static TideTimeHeight getTideTimeHeight(String tideDatum) {
+        return new TideTimeHeight(
+                getLocalTime(tideDatum.split(" ")[1]),
+                new BigDecimal(tideDatum.split(" ")[2]));
+    }
+
+    static int getFirstLowTideIndex(String dailyTideHeightsForPlace) {
+        return (dailyTideHeightsForPlace.substring(0, 2).equals("HW"))? 1:0;
+    }
+    static LocalTime getLocalTime(String time) {
+        return LocalTime.of(parseInt(time.split(":")[0]),
+                parseInt(time.split(":")[1])); }
+
 }

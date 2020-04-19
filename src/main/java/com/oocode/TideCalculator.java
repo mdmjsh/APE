@@ -3,16 +3,12 @@ package com.oocode;
 import java.io.IOException;
 import java.math.*;
 import java.time.*;
-import static java.lang.Integer.parseInt;
+
 
 public class TideCalculator {
 
 
     private TideAPIAdapter tideAPIAdapter = initTideAPIAdapter();
-
-    public static int getFirstLowTideIndex(String tideData) {
-        return (tideData.substring(0, 2).equals("HW"))? 1:0;
-    }
 
     public void main(String[] args) throws Exception {
         System.out.println(MidDayTide("Folkestone", "12-01-2020"));
@@ -20,17 +16,9 @@ public class TideCalculator {
 
     protected BigDecimal MidDayTide(String place, String date)
             throws IOException {
-
-        String dailyTideHeightsForPlace = tideAPIAdapter.getTideTimesString(place, date);
-
-        String[] tideData = dailyTideHeightsForPlace.split("\n");
-        TideTimeHeight lowTide = new TideTimeHeight(
-                getLocalTime(tideData[0].split(" ")[1]),
-                new BigDecimal(tideData[0].split(" ")[2]));
-        TideTimeHeight highTide = new TideTimeHeight(
-                getLocalTime(tideData[1].split(" ")[1]),
-                new BigDecimal(tideData[1].split(" ")[2]));
-        return interpolateTideHeight(lowTide, highTide);
+        TideTimeHeight[] lowAndHighTides = tideAPIAdapter.getLowAndHighTides(
+                tideAPIAdapter.getTideTimesString(place, date));
+        return interpolateTideHeight(lowAndHighTides[0], lowAndHighTides[1]);
     }
 
     protected TideAPIAdapter initTideAPIAdapter(){
@@ -49,12 +37,7 @@ public class TideCalculator {
         return lowTide.tideHeight.add(noonRiseInSeaLevel).setScale(2, RoundingMode.CEILING);
     }
 
-    private LocalTime getLocalTime(String time) {
-        return LocalTime.of(parseInt(time.split(":")[0]),
-                parseInt(time.split(":")[1])); }
-
-
-    private static class TideTimeHeight {
+    static class TideTimeHeight {
         final LocalTime localTime;
         final BigDecimal tideHeight;
         TideTimeHeight(LocalTime localTime, BigDecimal tideHeight) {

@@ -2,13 +2,10 @@ package com.oocode;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 import static junit.framework.TestCase.assertEquals;
-import static org.hamcrest.MatcherAssert.assertThat;
-import org.hamcrest.Matchers;
 import static org.mockito.Mockito.*;
+
 
 public class TestTideCalculator {
     @Test
@@ -29,10 +26,13 @@ public class TestTideCalculator {
         when(tideAPIAdapter.getTideTimesString("Folkestone", "12-01-2020")).thenReturn(knownErrorData);
         assertEquals(tideCalculator.MidDayTide("Folkestone", "12-01-2020").toString(),
                 "3.37");
+
+
+        // run again with the example data
+        String walkThroughData = "HW 03:57 3.90\nLW 10:09 1.40\nHW 16:21 4.00\nLW 22:33 1.60";
+        when(tideAPIAdapter.getTideTimesString("Folkestone", "12-01-2020")).thenReturn(walkThroughData);
+        assertEquals(tideCalculator.MidDayTide("Folkestone", "12-01-2020").toString(),
+                "2.18");
     }
-    // original attempt but couldn't get this working due to precision
-        //        assertThat(tideCalculator.MidDayTide("Folkestone", "12-01-2020"),
-//                Matchers.comparesEqualTo(new BigDecimal(3.37)));
-//    }
 }
 

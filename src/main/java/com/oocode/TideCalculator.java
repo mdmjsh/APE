@@ -1,6 +1,5 @@
 package com.oocode;
 
-import okhttp3.*;
 import java.io.IOException;
 import java.math.*;
 import java.time.*;
@@ -9,7 +8,7 @@ import static java.lang.Integer.parseInt;
 public class TideCalculator {
 
 
-    private static TideAPIAdapter tideAPIAdapter;
+    private static TideAPIAdapter tideAPIAdapter = initTideAPIAdapter();
 
     public static void main(String[] args) throws Exception {
         System.out.println(MidDayTide("Folkestone", "12-01-2020"));
@@ -28,6 +27,10 @@ public class TideCalculator {
                 getLocalTime(tideData[2].split(" ")[1]),
                 new BigDecimal(tideData[2].split(" ")[2]));
         return interpolateTideHeight(lowTide, highTide);
+    }
+
+    protected static TideAPIAdapter initTideAPIAdapter(){
+        return new TideAPIAdapter();
     }
 
     private static BigDecimal interpolateTideHeight(TideTimeHeight lowTide, TideTimeHeight highTide) {
@@ -53,5 +56,6 @@ public class TideCalculator {
         final BigDecimal tideHeight;
         TideTimeHeight(LocalTime localTime, BigDecimal tideHeight) {
             this.localTime = localTime;
-            this.tideHeight = tideHeight; }}
+            this.tideHeight = tideHeight; }
+    }
 }

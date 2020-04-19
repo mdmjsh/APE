@@ -10,12 +10,15 @@ import static org.mockito.Mockito.*;
 public class TestTideCalculator {
     @Test
     public void testInterpolateTideHeight() throws IOException {
-        // Make a Mock to stub just the API adapter but use the real interpolate method
-        // https://javadoc.io/static/org.mockito/mockito-core/3.3.3/org/mockito/Mockito.html
-        TideCalculator tideCalculator = mock(TideCalculator.class, CALLS_REAL_METHODS);
+        TideAPIAdapter tideAPIAdapter = mock(TideAPIAdapter.class);
         String knownErrorData = "LW 06:00 2.55\nHW 12:11 3.39\nLW 18:22 2.85";
+        TideCalculator tideCalculator = new TideCalculator();
+        // return the example data known to have shown buggy behaviour
 
-        when(tideCalculator.getTideTimesString("Folkestone", "12-01-2020")).thenReturn(knownErrorData);
+        class TideCalculator{}
+
+
+        when(tideAPIAdapter.getTideTimesString("Folkestone", "12-01-2020")).thenReturn(knownErrorData);
         assertThat(tideCalculator, equalTo(3.36));
     }
 }

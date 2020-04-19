@@ -6,8 +6,10 @@ import java.math.*;
 import java.time.*;
 import static java.lang.Integer.parseInt;
 
-public class TideCalculator implements TideCalculatorInterface {
+public class TideCalculator {
 
+
+    private static TideAPIAdapter tideAPIAdapter;
 
     public static void main(String[] args) throws Exception {
         System.out.println(MidDayTide("Folkestone", "12-01-2020"));
@@ -16,7 +18,7 @@ public class TideCalculator implements TideCalculatorInterface {
     protected static BigDecimal MidDayTide(String place, String date)
             throws IOException {
 
-        String dailyTideHeightsForPlace = getTideTimesString(place, date);
+        String dailyTideHeightsForPlace = tideAPIAdapter.getTideTimesString(place, date);
 
         String[] tideData = dailyTideHeightsForPlace.split("\n");
         TideTimeHeight lowTide = new TideTimeHeight(
@@ -26,37 +28,6 @@ public class TideCalculator implements TideCalculatorInterface {
                 getLocalTime(tideData[2].split(" ")[1]),
                 new BigDecimal(tideData[2].split(" ")[2]));
         return interpolateTideHeight(lowTide, highTide);
-    }
-
- /** Adapter wrapper to call the dry-fjord API.
-  * @param place The place name to search
-  * @param date String of the date to search on
-  * @return string of the tide data from the API response body
-  * */
-    static String getTideTimesString(String place, String date) throws IOException {
-        String dailyTideHeightsForPlace = makeApiCall(place, date);
-        String newline = System.getProperty("line.separator");
-        System.out.println("responseString: " + newline + newline + dailyTideHeightsForPlace);
-        return  dailyTideHeightsForPlace;
-    }
-
-    /** Calls the dry-fjord API and returns the ResponseBody string
-     * @param place The place name to search
-     * @param date String of the date to search on
-     * @return string of the tide data from the API response body
-     * */
-    private static String makeApiCall(String place, String date) throws IOException {
-        Request request = new Request.Builder()
-                .url(String.format(
-                        "https://dry-fjord-40481.herokuapp.com/tides/%s/%s",
-                        place, date))
-                .build();
-        try (Response response = new OkHttpClient.Builder().build()
-                .newCall(request).execute()) {
-            try (ResponseBody responseBody = response.body()) {
-                return responseBody.string();
-            }
-        }
     }
 
     private static BigDecimal interpolateTideHeight(TideTimeHeight lowTide, TideTimeHeight highTide) {
@@ -72,6 +43,10 @@ public class TideCalculator implements TideCalculatorInterface {
     private static LocalTime getLocalTime(String time) {
         return LocalTime.of(parseInt(time.split(":")[0]),
                 parseInt(time.split(":")[1])); }
+
+    public static void setTideAPIAdapter(TideAPIAdapter tideAPIAdapter) {
+        TideCalculator.tideAPIAdapter = tideAPIAdapter;
+    }
 
     private static class TideTimeHeight {
         final LocalTime localTime;

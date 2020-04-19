@@ -8,13 +8,13 @@ import static java.lang.Integer.parseInt;
 public class TideCalculator {
 
 
-    private static TideAPIAdapter tideAPIAdapter = initTideAPIAdapter();
+    private TideAPIAdapter tideAPIAdapter = initTideAPIAdapter();
 
-    public static void main(String[] args) throws Exception {
+    public void main(String[] args) throws Exception {
         System.out.println(MidDayTide("Folkestone", "12-01-2020"));
     }
 
-    protected static BigDecimal MidDayTide(String place, String date)
+    protected BigDecimal MidDayTide(String place, String date)
             throws IOException {
 
         String dailyTideHeightsForPlace = tideAPIAdapter.getTideTimesString(place, date);
@@ -29,11 +29,11 @@ public class TideCalculator {
         return interpolateTideHeight(lowTide, highTide);
     }
 
-    protected static TideAPIAdapter initTideAPIAdapter(){
+    protected TideAPIAdapter initTideAPIAdapter(){
         return new TideAPIAdapter();
     }
 
-    private static BigDecimal interpolateTideHeight(TideTimeHeight lowTide, TideTimeHeight highTide) {
+    private BigDecimal interpolateTideHeight(TideTimeHeight lowTide, TideTimeHeight highTide) {
         Duration lowToHighDeltaSeconds = Duration.between(lowTide.localTime, highTide.localTime);
         Duration LowToNoonDeltaSeconds = Duration.between(lowTide.localTime, LocalTime.NOON);
         double noonIntersection = (double) LowToNoonDeltaSeconds.toMillis() /
@@ -43,13 +43,10 @@ public class TideCalculator {
                 .setScale(2, RoundingMode.CEILING);
     }
 
-    private static LocalTime getLocalTime(String time) {
+    private LocalTime getLocalTime(String time) {
         return LocalTime.of(parseInt(time.split(":")[0]),
                 parseInt(time.split(":")[1])); }
 
-    public static void setTideAPIAdapter(TideAPIAdapter tideAPIAdapter) {
-        TideCalculator.tideAPIAdapter = tideAPIAdapter;
-    }
 
     private static class TideTimeHeight {
         final LocalTime localTime;

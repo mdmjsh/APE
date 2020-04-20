@@ -65,5 +65,4 @@ public class TideAPIAdapter implements TideAPIAdapterInterface{
     static LocalTime getLocalTime(String time) {
         return LocalTime.of(parseInt(time.split(":")[0]),
                 parseInt(time.split(":")[1])); }
-
 }

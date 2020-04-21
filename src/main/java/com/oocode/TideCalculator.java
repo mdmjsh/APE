@@ -2,6 +2,7 @@ package com.oocode;
 
 import java.io.IOException;
 import java.math.*;
+import java.text.ParseException;
 import java.time.*;
 
 
@@ -28,7 +29,7 @@ public class TideCalculator {
         return interpolateTideHeight(lowAndHighTides[0], lowAndHighTides[1]);
     }
 
-    protected boolean isWithinWindow(String date){
+    protected boolean isWithinWindow(String date) throws ParseException {
         return queryClock.daysFromToday(date) <=10;
     }
 

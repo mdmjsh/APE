@@ -2,6 +2,7 @@ package com.oocode;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.text.ParseException;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.mockito.Mockito.*;
@@ -50,7 +51,7 @@ public class TestTideCalculator {
     }
 
     @Test
-    public void testIsWithinWindow(){
+    public void testIsWithinWindow() throws ParseException {
         QueryClock queryClock = mock(QueryClock.class);
         // Override the queryClock attribute in the TideAdapter
         TideCalculator tideCalculator = new TideCalculator(){

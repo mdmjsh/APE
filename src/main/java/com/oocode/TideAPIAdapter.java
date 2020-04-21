@@ -62,7 +62,7 @@ public class TideAPIAdapter implements TideAPIAdapterInterface{
     static int getFirstLowTideIndex(String dailyTideHeightsForPlace) {
         return (dailyTideHeightsForPlace.substring(0, 2).equals("HW"))? 1:0;
     }
-    static LocalTime getLocalTime(String time) {
+    private static LocalTime getLocalTime(String time) {
         return LocalTime.of(parseInt(time.split(":")[0]),
                 parseInt(time.split(":")[1])); }
 }

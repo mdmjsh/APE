@@ -28,8 +28,8 @@ public class TestTideCalculator {
     public void testInterpolateTideHeight() throws IOException {
         TideAPIAdapter tideAPIAdapter = mock(TideAPIAdapter.class);
         // Override the initTideAPIAdapter to plug in the mock Adapter
-        TideCalculator tideCalculator = new TideCalculator(){
-
+        TideCalculator tideCalculator;
+        tideCalculator = new TideCalculator(){
             @Override
             protected TideAPIAdapter initTideAPIAdapter(){
                 return tideAPIAdapter;
@@ -49,12 +49,25 @@ public class TestTideCalculator {
                 "2.18");
     }
 
-
     @Test
-    public void testGetLowAndHighTides(){
-       assertEquals(TideAPIAdapter.getFirstLowTideIndex(knownErrorData), 0);
-        assertEquals(TideAPIAdapter.getFirstLowTideIndex(walkThroughData), 1);
+    public void testIsWithinWindow(){
+        QueryClock queryClock = mock(QueryClock.class);
+        // Override the queryClock attribute in the TideAdapter
+        TideCalculator tideCalculator = new TideCalculator(){
+            @Override
+            protected QueryClock initQueryClock(){
+                return queryClock;
+            }
+        };
+
+        for (Integer days : new Integer[]{1,9,10,11}) {
+            when(queryClock.daysFromToday("12-01-2020")).thenReturn(days);
+            assertEquals(tideCalculator.isWithinWindow("12-01-2000"), days <=10 );
+        }
+
     }
+
+
 
 }
 

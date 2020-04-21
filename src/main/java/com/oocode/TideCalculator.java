@@ -9,6 +9,13 @@ public class TideCalculator {
 
 
     private TideAPIAdapter tideAPIAdapter = initTideAPIAdapter();
+    private QueryClock queryClock = initQueryClock();
+
+    protected TideAPIAdapter initTideAPIAdapter(){
+        return new TideAPIAdapter();
+    }
+    protected QueryClock initQueryClock() { return new QueryClock();
+    }
 
     public void main(String[] args) throws Exception {
         System.out.println(MidDayTide("Folkestone", "12-01-2020"));
@@ -21,9 +28,10 @@ public class TideCalculator {
         return interpolateTideHeight(lowAndHighTides[0], lowAndHighTides[1]);
     }
 
-    protected TideAPIAdapter initTideAPIAdapter(){
-        return new TideAPIAdapter();
+    protected boolean isWithinWindow(String date){
+        return true;
     }
+
 
     private BigDecimal interpolateTideHeight(TideTimeHeight lowTide, TideTimeHeight highTide) {
         Duration lowToHighDeltaSeconds = Duration.between(lowTide.localTime, highTide.localTime);

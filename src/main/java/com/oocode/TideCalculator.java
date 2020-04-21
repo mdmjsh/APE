@@ -29,7 +29,7 @@ public class TideCalculator {
     }
 
     protected boolean isWithinWindow(String date){
-        return true;
+        return queryClock.daysFromToday(date) <=10;
     }
 
 

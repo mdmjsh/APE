@@ -9,7 +9,7 @@ import java.util.Date;
 public class QueryClock implements  QueryClockInterface{
      static SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
 
-    public int daysFromToday(String date) throws ParseException {
+    public int DaysFromToday(String date) throws ParseException {
         Instant queryDate = QueryClock.formatter.parse(date).toInstant();
         Instant today = GetCurrentDate().toInstant();
         return (int) Duration.between(today, queryDate).toDays();

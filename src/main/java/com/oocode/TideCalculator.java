@@ -30,9 +30,8 @@ public class TideCalculator {
     }
 
     protected boolean isWithinWindow(String date) throws ParseException {
-        return queryClock.daysFromToday(date) <=10;
+        return queryClock.DaysFromToday(date) <=10;
     }
-
 
     private BigDecimal interpolateTideHeight(TideTimeHeight lowTide, TideTimeHeight highTide) {
         Duration lowToHighDeltaSeconds = Duration.between(lowTide.localTime, highTide.localTime);

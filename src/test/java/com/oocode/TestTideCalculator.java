@@ -60,14 +60,10 @@ public class TestTideCalculator {
             }
         };
 
-        for (Integer days : new Integer[]{1,9,10,11}) {
-            when(queryClock.daysFromToday("12-01-2020")).thenReturn(days);
-            assertEquals(tideCalculator.isWithinWindow("12-01-2000"), days <=10 );
+        for (Integer daysFromToday : new Integer[]{1,9,10,11}) {
+            when(queryClock.daysFromToday("12-01-2020")).thenReturn(daysFromToday);
+            assertEquals(tideCalculator.isWithinWindow("12-01-2000"), daysFromToday <=10 );
         }
-
     }
-
-
-
 }
 

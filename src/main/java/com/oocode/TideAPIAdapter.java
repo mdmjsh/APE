@@ -43,6 +43,10 @@ public class TideAPIAdapter implements TideAPIAdapterInterface{
         }
     }
 
+    /** Convert the raw dailyTideHeightsForPlace string into an array of TideTimeHeight objects
+     * @param dailyTideHeightsForPlace The place name to search
+     * @return Array of TideTimeHeight where TideTimeHeight[0] = low tide and TideTimeHeight[1] = high tide
+     * */
     TideTimeHeight[] getLowAndHighTides(String dailyTideHeightsForPlace){
         int LowTideIndex = getFirstLowTideIndex(dailyTideHeightsForPlace);
 
@@ -53,15 +57,19 @@ public class TideAPIAdapter implements TideAPIAdapterInterface{
         return new TideTimeHeight[]{lowTide, highTide};
     }
 
+    /** Convert A low or high tide string into a TideTimeHeight */
     static TideTimeHeight getTideTimeHeight(String tideDatum) {
         return new TideTimeHeight(
                 getLocalTime(tideDatum.split(" ")[1]),
                 new BigDecimal(tideDatum.split(" ")[2]));
     }
 
+    /** Returns the index of the first low tide from a dailyTideHeightsForPlace string */
     static int getFirstLowTideIndex(String dailyTideHeightsForPlace) {
         return (dailyTideHeightsForPlace.substring(0, 2).equals("HW"))? 1:0;
     }
+
+    /** Return the local time of an input time string */
     private static LocalTime getLocalTime(String time) {
         return LocalTime.of(parseInt(time.split(":")[0]),
                 parseInt(time.split(":")[1])); }

@@ -26,9 +26,7 @@ public class TideCalculator {
         if (isWithinWindow(date)){
             System.out.println(MidDayTide(place, date));
         }
-        else{
-            System.out.println(OUTSIDE_WINDOW);
-        }
+        else System.out.println(OUTSIDE_WINDOW);
     }
 
     protected BigDecimal MidDayTide(String place, String date)
@@ -40,7 +38,7 @@ public class TideCalculator {
     }
 
     protected boolean isWithinWindow(String date) throws ParseException {
-        return queryClock.DaysFromToday(date) <=10;
+        return queryClock.daysFromToday(date) <=10;
     }
 
     private BigDecimal interpolateTideHeight(TideTimeHeight lowTide, TideTimeHeight highTide) {

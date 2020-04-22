@@ -3,7 +3,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.text.ParseException;
 
@@ -65,7 +64,7 @@ public class TestTideCalculator {
         };
 
         for (int daysFromToday : new int[]{1,9,10,11}) {
-            when(queryClock.DaysFromToday("12-01-2020")).thenReturn(daysFromToday);
+            when(queryClock.daysFromToday("12-01-2020")).thenReturn(daysFromToday);
             assertEquals(tideCalculator.isWithinWindow("12-01-2020"), daysFromToday <=10 );
         }
     }
@@ -73,19 +72,18 @@ public class TestTideCalculator {
 
     @Test
     public void TestMainWhenWithinWindow() throws Exception {
-        PrintStream mockPrinter = mock(PrintStream.class);
-        System.setOut(mockPrinter);
-
         // slightly hacky solution to incrementing the counts from the inner class
         final int[] MidDayTideCalls = {0};
 
         // Override all methods we don't need to actually call in this test
         TideCalculator tideCalculator = new TideCalculator(){
 
+            @Override
             protected boolean isWithinWindow(String date){
                 return true;
             }
 
+            @Override
             protected BigDecimal MidDayTide(String place, String date){
                 MidDayTideCalls[0]++;
                 return BigDecimal.ONE;
@@ -95,5 +93,34 @@ public class TestTideCalculator {
         // Get the first element of the single element call count arrays from the inner classes
         assertEquals(MidDayTideCalls[0], 1);
     }
+    /** Very similar test to the above, but testing the printer is called when ourside of window */
+    @Test
+    public void TestMainPrintWhenOutsideWindow() throws Exception {
+        PrintStream mockPrinter = mock(PrintStream.class);
+        System.setOut(mockPrinter);
+
+        // slightly hacky solution to incrementing the counts from the inner class
+        final int[] MidDayTideCalls = {0};
+
+        // Override all methods we don't need to actually call in this test
+        TideCalculator tideCalculator = new TideCalculator(){
+
+            @Override
+            protected boolean isWithinWindow(String date){
+                return false;
+            }
+
+            @Override
+            protected BigDecimal MidDayTide(String place, String date){
+                MidDayTideCalls[0]++;
+                return BigDecimal.ONE;
+            }
+        };
+        tideCalculator.main(new String[]{"Folkestone", "12-01-2020"});
+        // Get the first element of the single element call count arrays from the inner classes
+        assertEquals(MidDayTideCalls[0], 0);
+        verify(mockPrinter).println(startsWith(tideCalculator.OUTSIDE_WINDOW));
+    }
+
 }
 

@@ -18,9 +18,9 @@ public class TideCalculator {
     protected QueryClock initQueryClock() { return new QueryClock();
     }
 
-    public void main(String[] args) throws Exception {
-        System.out.println(MidDayTide("Folkestone", "12-01-2020"));
-    }
+//    public void main(String[] args) throws Exception {
+//        System.out.println(MidDayTide("Folkestone", "12-01-2020"));
+//    }
 
     protected BigDecimal MidDayTide(String place, String date)
             throws IOException {

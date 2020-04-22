@@ -17,16 +17,26 @@ public class TideCalculator {
     }
     protected QueryClock initQueryClock() { return new QueryClock();
     }
+    String OUTSIDE_WINDOW = "No longer supports dates that are more than 10 days in the future";
 
-//    public void main(String[] args) throws Exception {
-//        System.out.println(MidDayTide("Folkestone", "12-01-2020"));
-//    }
+    public void main(String[] args) throws Exception {
+        String place = args[0];
+        String date = args[1];
+
+        if (isWithinWindow(date)){
+            System.out.println(MidDayTide(place, date));
+        }
+        else{
+            System.out.println(OUTSIDE_WINDOW);
+        }
+    }
 
     protected BigDecimal MidDayTide(String place, String date)
             throws IOException {
-        TideTimeHeight[] lowAndHighTides = tideAPIAdapter.getLowAndHighTides(
-                tideAPIAdapter.getTideTimesString(place, date));
-        return interpolateTideHeight(lowAndHighTides[0], lowAndHighTides[1]);
+
+            TideTimeHeight[] lowAndHighTides = tideAPIAdapter.getLowAndHighTides(
+                    tideAPIAdapter.getTideTimesString(place, date));
+            return interpolateTideHeight(lowAndHighTides[0], lowAndHighTides[1]);
     }
 
     protected boolean isWithinWindow(String date) throws ParseException {

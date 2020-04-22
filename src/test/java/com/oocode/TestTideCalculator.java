@@ -70,60 +70,30 @@ public class TestTideCalculator {
         }
     }
 
-//    @Test
-//    public  void test
-    // call count = 0
-    // Overload API - increment call count
-    // Overload isWithinWindow (return True / False)
-    // assert call count
 
     @Test
-    public void TestCallsWhenWithinWindow() throws IOException {
+    public void TestMainWhenWithinWindow() throws Exception {
         PrintStream mockPrinter = mock(PrintStream.class);
         System.setOut(mockPrinter);
 
         // slightly hacky solution to incrementing the counts from the inner class
-        final int[] isWithinWindowCalls = {0};
-        final int[] getLowAndHighTides = {0};
-        final int[] getTideTimeStringCalls = {0};
-        final int[] interpolateTideHeightCalls = {0};
+        final int[] MidDayTideCalls = {0};
 
         // Override all methods we don't need to actually call in this test
-
         TideCalculator tideCalculator = new TideCalculator(){
 
-            protected boolean isWithinWindow(){
-                isWithinWindowCalls[0]++;
+            protected boolean isWithinWindow(String date){
                 return true;
             }
 
-            protected TideTimeHeight[] getLowAndHighTides(){
-                getLowAndHighTides[0]++;
-                return walkThroughDataTides;
-            }
-
-            protected String getTideTimesString(){
-                getTideTimeStringCalls[0]++;
-                return  "blah";
-            }
-
-            protected BigDecimal interpolateTideHeight(){
-                interpolateTideHeightCalls[0]++;
+            protected BigDecimal MidDayTide(String place, String date){
+                MidDayTideCalls[0]++;
                 return BigDecimal.ONE;
             }
         };
-        tideCalculator.MidDayTide("Folkestone", "12-01-2020");
+        tideCalculator.main(new String[]{"Folkestone", "12-01-2020"});
         // Get the first element of the single element call count arrays from the inner classes
-        int[] calls = {isWithinWindowCalls[0], getLowAndHighTides[0],
-                getTideTimeStringCalls[0], interpolateTideHeightCalls[0]};
-        for (int count: calls){
-            // When isWithinWindowCalls is True all calls are made
-            assertEquals(count, 1);
-        }
-
-
-
-        verify(mockPrinter).println(startsWith("Use:"));
+        assertEquals(MidDayTideCalls[0], 1);
     }
 }
 
